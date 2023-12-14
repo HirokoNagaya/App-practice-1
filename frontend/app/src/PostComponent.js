@@ -24,13 +24,13 @@ class PostComponent extends React.Component {
             {this.props.post.content}
           </Typography>
         </CardContent>
-        {/* 一時的にコメントアウトします
-        <CardActions>
+        {/* <CardActions> */}
           <Button size="small" variant="contained">DETAIL</Button>
           <Button size="small" variant="contained" color="primary">EDIT</Button>
-          <Button size="small" variant="contained" color="secondary" startIcon={<DeleteIcon />}>DELETE</Button>
-        </CardActions>
-        */}
+          <Button size="small" variant="contained" color="primary">DELETE</Button>
+          {/* <Button size="small" variant="contained" color="secondary" startIcon={<DeleteIcon />}>DELETE</Button> */} 
+        {/* </CardActions> */}
+       
       </Card>
     );
   }
