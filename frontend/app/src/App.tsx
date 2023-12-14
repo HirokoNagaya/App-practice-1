@@ -2,6 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import logo from './logo.svg';
 import './App.css';
+import { Box } from '@mui/material';
+import { Grid } from '@mui/material';
 
 // Postの型定義
 type Post = {
@@ -28,9 +30,12 @@ const axiosInstance = axios.create({
 });
 
 class App extends React.Component {
-  state = {
-    posts: []
-  };
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      posts: []
+    };
+  }
 
   componentDidMount() {
     // 作成したインスタンスを使用
@@ -47,12 +52,13 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <h1>My React App!</h1>
-        <ul>
-          {this.state.posts.map((post: Post) => (
+        <Box p={5}>
+          <Grid container spacing={4}>
+          {(this.state as State).posts.map((post: Post) => (
             <li key={post.id}>{post.title}{post.content}</li>
           ))}
-        </ul>
+          </Grid>
+        </Box>
       </div>
     );
   }
