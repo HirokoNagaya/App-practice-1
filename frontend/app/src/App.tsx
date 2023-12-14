@@ -1,10 +1,8 @@
 import React from 'react';
 import axios from 'axios';
-import logo from './logo.svg';
-import './App.css';
 import { Box } from '@mui/material';
 import { Grid } from '@mui/material';
-
+import PostComponent from './PostComponent';
 // Postの型定義
 type Post = {
   id: number;
@@ -29,7 +27,8 @@ const axiosInstance = axios.create({
     responseType: 'json'
 });
 
-class App extends React.Component {
+// class App extends React.Component {
+class App extends React.Component<{}, State> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -54,14 +53,19 @@ class App extends React.Component {
       <div className="App">
         <Box p={5}>
           <Grid container spacing={4}>
-          {(this.state as State).posts.map((post: Post) => (
-            <li key={post.id}>{post.title}{post.content}</li>
-          ))}
+            {this.getPosts()}
           </Grid>
         </Box>
       </div>
     );
   }
-}
 
+  getPosts() {
+    return this.state.posts.map((post: Post) => (
+      <Grid item xs={4} key={post.id}>
+        <PostComponent post={post} />
+      </Grid>
+    ));
+  }
+}
 export default App;
