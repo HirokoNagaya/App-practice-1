@@ -1,8 +1,9 @@
 import React from 'react';
 import axios from 'axios';
-import { Box } from '@mui/material';
-import { Grid } from '@mui/material';
-import PostComponent from './PostComponent';
+import { Box, Grid } from '@mui/material';
+import PostComponent from './components/PostComponent';
+import CreateForm from './components/CreateForm';
+
 // Postの型定義
 type Post = {
   id: number;
@@ -11,11 +12,17 @@ type Post = {
   // 他の必要なプロパティをここに追加
 };
 
-// Stateの型定義
-type State = {
-  posts: Post[];
+// CreateFormInputsの型定義
+type CreateFormInputs = {
+  title: string;
+  content: string;
 };
 
+// Stateの型定義
+type State = {
+  createFormInputs: CreateFormInputs;
+  posts: Post[];
+};
 
 // Axios インスタンスの作成
 const axiosInstance = axios.create({
@@ -32,6 +39,10 @@ class App extends React.Component<{}, State> {
   constructor(props: any) {
     super(props);
     this.state = {
+      createFormInputs: {
+        title: '',
+        content: ''
+      },
       posts: []
     };
   }
@@ -48,11 +59,49 @@ class App extends React.Component<{}, State> {
     });
   }
 
+  handleInputChange = (itemName: keyof CreateFormInputs, e: React.ChangeEvent<HTMLInputElement>) => {
+    const newInputs = { ...this.state.createFormInputs };
+    newInputs[itemName] = e.target.value;
+
+    this.setState({
+        createFormInputs: newInputs
+    });
+  }
+
+  handlePostSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const inputValues = Object.values(this.state.createFormInputs);
+
+    if (inputValues.every(value => value)) {
+        axiosInstance.post("/posts", {
+            post: this.state.createFormInputs,
+        })
+            .then((res: any) => {
+                const posts = this.state.posts.slice();
+                posts.push(res["data"]);
+                this.setState({
+                    posts: posts,
+                    createFormInputs: {
+                        title: "",
+                        content: "",
+                    },
+                });
+            })
+            .catch(data => {
+                console.log(data)
+            });
+    }
+}
   render() {
     return (
       <div className="App">
         <Box p={5}>
-          <Grid container spacing={4}>
+          <CreateForm
+            inputs={this.state.createFormInputs}
+            onChange={this.handleInputChange}
+            onSubmit={this.handlePostSubmit}
+                      />
+          <Grid container spacing={2}>
             {this.getPosts()}
           </Grid>
         </Box>
