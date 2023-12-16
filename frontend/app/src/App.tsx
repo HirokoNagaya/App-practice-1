@@ -24,7 +24,6 @@ type State = {
   posts: Post[];
 };
 
-
 // Axios インスタンスの作成
 const axiosInstance = axios.create({
     baseURL: 'http://localhost:3001',
@@ -60,18 +59,51 @@ class App extends React.Component<{}, State> {
     });
   }
 
+  handleInputChange = (itemName: keyof CreateFormInputs, e: React.ChangeEvent<HTMLInputElement>) => {
+    const newInputs = { ...this.state.createFormInputs };
+    newInputs[itemName] = e.target.value;
+
+    this.setState({
+        createFormInputs: newInputs
+    });
+  }
+
+  handlePostSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const inputValues = Object.values(this.state.createFormInputs);
+
+    if (inputValues.every(value => value)) {
+        axiosInstance.post("/posts", {
+            post: this.state.createFormInputs,
+        })
+            .then((res: any) => {
+                const posts = this.state.posts.slice();
+                posts.push(res["data"]);
+                this.setState({
+                    posts: posts,
+                    createFormInputs: {
+                        title: "",
+                        content: "",
+                    },
+                });
+            })
+            .catch(data => {
+                console.log(data)
+            });
+    }
+}
   render() {
     return (
       <div className="App">
         <Box p={5}>
-        <CreateForm
-          inputs={this.state.createFormInputs}
-          // onChange={this.handleInputChange}
-          // onSubmit={this.handlePostSubmit}
-                    />
+          <CreateForm
+            inputs={this.state.createFormInputs}
+            onChange={this.handleInputChange}
+            onSubmit={this.handlePostSubmit}
+                      />
           <Grid container spacing={2}>
-          {this.getPosts()}
-        </Grid>
+            {this.getPosts()}
+          </Grid>
         </Box>
       </div>
     );
