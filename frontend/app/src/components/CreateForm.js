@@ -4,43 +4,48 @@ import SendIcon from '@mui/icons-material/Send';
 
 function CreateForm(props) {
   return (
-      <form>
-          <Grid container>
-              <Grid item xs={12}>
-                  <TextField
-                      label="title"
-                      id="title"
-                      value={props.inputs["title"]}
-                      onChange={(e) => props.onChange("title", e)}
-                  />
-              </Grid>
-              <Grid item xs={2}/>
-              <Grid item xs={8}>
-                  <TextField
-                      label="content"
-                      id="content"
-                      multiline
-                      fullWidth
-                      value={props.inputs["content"]}
-                      onChange={(e) => props.onChange("content", e)}
-                  />
-              </Grid>
-              <Grid item xs={2}/>
-              <Grid item xs={12}>
-                  <Box mt={5}>
-                      <Button
-                          variant="contained"
-                          color="primary"
-                          endIcon={<SendIcon/>}
-                          onClick={props.onSubmit}
-                      >
-                          CREATE
-                      </Button>
-                  </Box>
-              </Grid>
-          </Grid>
-      </form>
-  )
+    <form>
+      <Grid container spacing={2} alignItems="center" justify="center">
+        <Grid item xs={12}>
+          <Box display="flex" justifyContent="center">
+            <TextField
+              label="Title"
+              id="title"
+              value={props.inputs["title"]}
+              onChange={(e) => props.onChange("title", e)}
+              fullWidth
+            />
+          </Box>
+        </Grid>
+        <Grid item xs={12}>
+          <Box display="flex" justifyContent="center">
+            <TextField
+              label="Content"
+              id="content"
+              multiline
+              rows={4} // 任意の行数
+              value={props.inputs["content"]}
+              onChange={(e) => props.onChange("content", e)}
+              fullWidth
+            />
+          </Box>
+        </Grid>
+        <Grid item xs={12}>
+          <Box display="flex" justifyContent="center" mt={5}>
+            <Button
+              variant="contained"
+              color="primary"
+              endIcon={<SendIcon />}
+              onClick={props.onSubmit}
+            >
+              Create
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
+    </form>
+  );
 }
+
 
 export default CreateForm;
