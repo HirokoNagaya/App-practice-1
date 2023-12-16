@@ -1,8 +1,9 @@
 import React from 'react';
 import axios from 'axios';
-import { Box } from '@mui/material';
-import { Grid } from '@mui/material';
-import PostComponent from './PostComponent';
+import { Box, Grid } from '@mui/material';
+import PostComponent from './components/PostComponent';
+import CreateForm from './components/CreateForm';
+
 // Postの型定義
 type Post = {
   id: number;
@@ -11,8 +12,15 @@ type Post = {
   // 他の必要なプロパティをここに追加
 };
 
+// CreateFormInputsの型定義
+type CreateFormInputs = {
+  title: string;
+  content: string;
+};
+
 // Stateの型定義
 type State = {
+  createFormInputs: CreateFormInputs;
   posts: Post[];
 };
 
@@ -32,6 +40,10 @@ class App extends React.Component<{}, State> {
   constructor(props: any) {
     super(props);
     this.state = {
+      createFormInputs: {
+        title: '',
+        content: ''
+      },
       posts: []
     };
   }
@@ -52,9 +64,14 @@ class App extends React.Component<{}, State> {
     return (
       <div className="App">
         <Box p={5}>
-          <Grid container spacing={4}>
-            {this.getPosts()}
-          </Grid>
+        <CreateForm
+          inputs={this.state.createFormInputs}
+          // onChange={this.handleInputChange}
+          // onSubmit={this.handlePostSubmit}
+                    />
+          <Grid container spacing={2}>
+          {this.getPosts()}
+        </Grid>
         </Box>
       </div>
     );
