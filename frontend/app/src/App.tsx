@@ -48,6 +48,7 @@ class App extends React.Component<{}, State> {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handlePostSubmit = this.handlePostSubmit.bind(this);
     this.handlePostDelete = this.handlePostDelete.bind(this);
+    this.handlePostUpdate = this.handlePostUpdate.bind(this);
   }
 
   componentDidMount() {
@@ -112,6 +113,29 @@ class App extends React.Component<{}, State> {
       .catch(data => {
           console.log(data);
       });
+  }
+
+  handlePostUpdate = (id: number, inputs: any, e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const inputValues = Object.values(inputs);
+
+    if (inputValues.every(value => value)) {
+      axiosInstance.patch(`/posts/${id}`, {
+          post: inputs
+      })
+          .then(results => {
+              const posts = this.state.posts.slice();
+              const index = posts.findIndex(post => post["id"] === id);
+              posts.splice(index, 1, results["data"]);
+
+              this.setState({
+                  posts: posts
+              });
+          })
+          .catch(data => {
+              console.log(data);
+          });
+  }
 }
 
   render() {
