@@ -45,6 +45,9 @@ class App extends React.Component<{}, State> {
       },
       posts: []
     };
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handlePostSubmit = this.handlePostSubmit.bind(this);
+    this.handlePostDelete = this.handlePostDelete.bind(this);
   }
 
   componentDidMount() {
@@ -91,7 +94,26 @@ class App extends React.Component<{}, State> {
                 console.log(data)
             });
     }
+  }
+
+  handlePostDelete = (id: number, e: React.MouseEvent) => {
+    axiosInstance.delete(`/posts/${id}`)
+      .then((res: any) => {
+          const targetIndex = this.state.posts.findIndex((post: Post) => {
+              return post["id"] === res["data"]["id"]
+          });
+          const posts = this.state.posts.slice();
+          posts.splice(targetIndex, 1);
+
+          this.setState({
+              posts: posts
+          });
+      })
+      .catch(data => {
+          console.log(data);
+      });
 }
+
   render() {
     return (
       <div className="App">
@@ -112,7 +134,10 @@ class App extends React.Component<{}, State> {
   getPosts() {
     return this.state.posts.map((post: Post) => (
       <Grid item xs={4} key={post.id}>
-        <PostComponent post={post} />
+        <PostComponent
+        post={post}
+        onDelete={this.handlePostDelete}
+        />
       </Grid>
     ));
   }
